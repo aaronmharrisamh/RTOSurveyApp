@@ -2,6 +2,8 @@
 /docs/
 /mockups/
 /.claude/
+CLAUDE.md
+AGENTS.md
 
 # Local dependencies and generated development output
 /node_modules/

@@ -24,24 +24,23 @@ The framed mobile view is 390 x 867, approximately 20:9. Full size follows the a
 | [B4](mockup-b4.html) | Daily Focus |
 | [B5](mockup-b5.html) | Together Today — proposed 2026 designer's choice |
 
-Publishable pages are at the repository root and all dependencies are under assets/. They do not depend on anything under the ignored docs/, mockups/, or .claude/ folders. The original A concepts remain in the local mockups/ folder.
+Publishable pages are at the repository root and all dependencies are under assets/. They do not depend on anything under the ignored docs/, mockups/, or .claude/ folders. CLAUDE.md and AGENTS.md are also ignored at every folder depth. The original A concepts remain in the local mockups/ folder.
 
 ## Publish on GitHub Pages
 
-Connect this initialized local Git repository to the repository you create on GitHub. For a new, empty repository, the usual commands are:
+The working repository is C:\Users\aaron\Documents\RTOSurveyApp. Its origin remote is already set to https://github.com/aaronmharrisamh/RTOSurveyApp.git and main tracks origin/main. To publish later changes from this folder:
 
 ~~~sh
 git add .
-git commit -m "Add Cherry Together B design previews"
-git remote add origin https://github.com/YOUR-ACCOUNT/YOUR-REPOSITORY.git
-git push -u origin main
+git commit -m "Update Cherry Together previews"
+git push origin main
 ~~~
 
 Then open the repository's Settings → Pages. Select **Deploy from a branch**, choose **main**, and choose **/(root)**. Save. GitHub will provide the site URL.
 
 The required marker is **.nojekyll** (this spelling). It disables the default Jekyll processing for this static site. All links and assets use relative paths so the site also works under a project URL such as https://YOUR-ACCOUNT.github.io/YOUR-REPOSITORY/. [GitHub Pages setup documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
 
-No remote, commit, or push is created by the local preparation task. No custom domain or publishing workflow is needed for this branch/root setup.
+The copy and ignore-rule update preserves the existing Git history and remote. It does not commit or push changes. No custom domain or publishing workflow is needed for this branch/root setup.
 
 ## Sample data
 
