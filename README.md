@@ -2,6 +2,8 @@
 
 Open [index.html](index.html) to compare B1–B5. This root folder is a ready-to-publish static GitHub Pages site. No build, package install, database, or secret is required.
 
+The new **Cherry On Together** D series is available from [Finished mockups](finishedmockups/index.html). [Open D5](finishedmockups/Mockup%20D/index.html) or [compare D1–D5](finishedmockups/Mockup%20D/index.html#mockups). The self-contained `finishedmockups/Mockup D/` folder can also be copied to another website root.
+
 ## Navigation
 
 - The root index is the B-series overview.
