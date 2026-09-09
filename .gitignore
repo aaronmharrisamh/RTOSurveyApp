@@ -1,0 +1,20 @@
+# Local research, previous previews, and assistant configuration
+/docs/
+/mockups/
+/.claude/
+
+# Local dependencies and generated development output
+/node_modules/
+/dist/
+/coverage/
+/playwright-report/
+/test-results/
+
+# Local credentials and operating-system files
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.log
