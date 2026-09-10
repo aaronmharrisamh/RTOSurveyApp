@@ -12,7 +12,7 @@
   const root=document.getElementById('app'),dialog=document.getElementById('app-dialog'),announcer=document.getElementById('announcement');
   document.body.classList.add('design-'+concept.id);
   document.title=concept.id.toUpperCase()+' · Cherry On Together survey · Red Truck Orchards';
-  root.innerHTML=`<div class="app-frame"><header class="app-header"><a class="brand" href="#" data-action="home" aria-label="Red Truck Orchards, Cherry On Together survey home"><img src="assets/orchard-mark.svg" alt=""><span><strong>Red Truck Orchards</strong><small>Cherry On Together survey</small></span></a><div class="account-tools"><button class="menu-button" data-action="menu" aria-label="Open menu">${icon('menu')}</button><button class="account-button" data-action="account" aria-label="Open account"><span class="avatar">A</span></button></div></header><main id="slide-area" tabindex="-1" aria-label="Current task"></main><nav class="dashboard" aria-label="Your survey"><button data-section="today">${icon('home')}<span>Today</span></button><button data-section="calendar">${icon('calendar')}<span>Calendar</span></button><button data-section="chart">${icon('chart')}<span>Chart</span></button><button data-section="guide">${icon('guide')}<span>Guide</span></button></nav><footer class="preview-tools"><button class="demo-chip" data-action="demo" aria-label="Open demo controls">DEMO<span class="demo-dot"></span></button><div class="view-tools"><button class="view-button" data-action="device" aria-label="Switch to desktop view" title="Switch to desktop view">${icon('desktop')}</button><button class="view-button" data-action="gallery" aria-label="Compare five mockups" title="Compare five mockups">${icon('cards')}</button><button class="view-button" data-action="frame" aria-label="Show review frame" title="Show review frame">${icon('frame')}</button><button class="view-button help-control" data-action="help" aria-label="Help" title="Help">${icon('help')}</button></div></footer></div>`;
+  root.innerHTML=`<div class="app-frame"><header class="app-header"><a class="brand" href="#" data-action="home" aria-label="Red Truck Orchards, Cherry On Together survey home"><img src="assets/orchard-mark.svg" alt=""><span><strong>Red Truck Orchards</strong><small>Cherry On Together survey</small></span></a><div class="account-tools"><button class="menu-button" data-action="menu" aria-label="Open menu">${icon('menu')}</button><button class="account-button" data-action="account" aria-label="Open account"><span class="avatar">A</span></button></div></header><main id="slide-area" tabindex="-1" aria-label="Current task"></main><div class="app-bottom"><nav class="dashboard" aria-label="Your survey"><button data-section="today">${icon('home')}<span>Today</span></button><button data-section="calendar">${icon('calendar')}<span>Calendar</span></button><button data-section="chart">${icon('chart')}<span>Chart</span></button><button data-section="guide">${icon('guide')}<span>Guide</span></button></nav><button class="help-control" data-action="help" aria-label="Help" title="Help">${icon('help')}</button></div></div>`;
   const stage=root.querySelector('#slide-area');
   const allSelected=()=>state.answers.every(value=>value!==null);
   const completeUse=()=>{const record=state.records[state.today];return M.stage(state.today)!==1||!!record&&(record.amount!==null&&(record.amount!=='none'||record.recall!==null));};
@@ -112,12 +112,15 @@
     root.querySelector('.account-button').setAttribute('aria-label',state.signedIn?'Open Alex’s account':'Sign in');
     if(canAnimate){transitioning=true;panel.animate([{transform:`translateX(${direction>0?'':'-'}14%)`,opacity:.25},{transform:'translateX(0)',opacity:1}],{duration:300,easing:'cubic-bezier(.2,.7,.3,1)'}).finished.then(()=>{transitioning=false;focusSlide(panel);}).catch(()=>{transitioning=false;});}
     else{transitioning=false;if(direction)focusSlide(panel);}
-    applyView();
+    applyView();reportDemoState();
   }
   function focusSlide(panel){if(panel.isConnected&&!panel.inert)(panel.querySelector('legend,h1')||stage).focus({preventScroll:true});}
   function go(flow,direction=1){state.flow=flow;state.section='today';save();render(direction);}
   function navigate(section){recordDay=null;edit=null;state.section=section;if(section==='calendar')calendarWeek=M.stage(state.today);save();render(1);}
-  function applyView(){document.body.dataset.device=view.device;document.body.classList.toggle('standalone',!framed);const device=root.querySelector('[data-action="device"]'),next=view.device==='mobile'?'desktop':'mobile';device.innerHTML=icon(next);device.setAttribute('aria-label','Switch to '+next+' view');device.title='Switch to '+next+' view';const frame=root.querySelector('[data-action="frame"]');frame.innerHTML=icon(view.filled?'frame':'expand');frame.setAttribute('aria-label',view.filled?'Show review frame':'Fill the app frame');frame.title=view.filled?'Show review frame':'Fill the app frame';}
+  function applyView(){document.body.dataset.device=view.device;document.body.classList.toggle('standalone',!framed);}
+  function reportDemoState(){if(framed)parent.postMessage({type:'d-demo-state',scenario:state.scenario,pattern:state.pattern},'*');}
+  function loadDemoSample(scenario,pattern){if(transitioning){setTimeout(()=>loadDemoSample(scenario,pattern),80);return;}reset(scenario,pattern);}
+
   function openDialog(title,body,kind='help'){
     if(!dialog.open)dialogReturn=document.activeElement;
     dialog.dataset.kind=kind;dialog.innerHTML=`<div class="dialog-heading"><h2 id="dialog-title" tabindex="-1">${title}</h2><button data-action="close-dialog" aria-label="Close">${icon('close')}</button></div><div class="dialog-body">${body}</div>`;
@@ -128,9 +131,6 @@
   function help(){openDialog('Need help?',`<p>${state.flow==='question'&&state.section==='today'?'Choose one answer. Then press Next.':'Use Today to open your daily survey.'}</p>${state.flow==='question'&&state.section==='today'?menuRow('Explain this question','explain'):menuRow('Read the short guide','open-guide')}${menuRow('Ask Red Truck Orchards','contact')}`,'help');}
   function menu(){openDialog('Menu',`${menuRow('Today','menu-today')}${menuRow('Your study guide','open-guide')}${menuRow('Your delivery','delivery')}`,'menu');}
   function account(){openDialog(state.signedIn?'Hello, Alex.':'Your account',state.signedIn?`<p>Alex Morgan<br><span class="small-note">Sample volunteer</span></p>${menuRow('Sign out','sign-out')}`:`<p>This preview uses a sample account.</p>${button('Sign in as Alex','sign-in')}`,'account');}
-  function demo(){openDialog('Demo controls',`<p class="demo-caption">${concept.id.toUpperCase()} · ${concept.name}</p>${menuRow('Load a study week','demo-weeks')}${menuRow('Change the sample chart','demo-patterns')}${menuRow('Developer notes','notes')}${menuRow('Reset this design','reset-confirm')}`,'demo');}
-  function demoWeeks(){openDialog('Choose a sample',`<p class="small-note">This replaces sample changes in ${concept.id.toUpperCase()}.</p>${Object.entries(M.SCENARIOS).map(([id,item])=>menuRow(item.label,'load-sample',`data-scenario="${id}"`)).join('')}${menuRow('Back','demo')}`,'demo');}
-  function demoPatterns(){openDialog('Sample chart',`<p class="small-note">This loads new sample answers. Each pattern is fictional.</p>${menuRow('Mixed responses','load-pattern','data-pattern="mixed"')}${menuRow('Lower ratings','load-pattern','data-pattern="lower"')}${menuRow('Higher ratings','load-pattern','data-pattern="higher"')}${menuRow('Back','demo')}`,'demo');}
   function reset(scenario='vinegar',pattern='mixed'){store.reset(scenario,pattern);state=store.state;calendarWeek=M.stage(state.today);recordDay=null;edit=null;closeDialog();render(1);announce('Sample loaded.');}
   function editAnswer(index){const record=state.records[recordDay];if(!record)return;edit={kind:'answer',day:recordDay,index,value:record.answers[index]};render(1);}
   function finish(){state.flow='done';state.section='today';save();render(1);announce('Done for today. Your answers are saved.');}
@@ -166,7 +166,7 @@
   });
   document.addEventListener('click',event=>{
     const button=event.target.closest('[data-action],[data-section]');if(!button)return;event.preventDefault();
-    if(transitioning&&!['close-dialog','help','demo','menu','account'].includes(button.dataset.action))return;
+    if(transitioning&&!['close-dialog','help','menu','account'].includes(button.dataset.action))return;
     if(button.dataset.section){navigate(button.dataset.section);return;}
     const action=button.dataset.action;
     switch(action){
@@ -200,22 +200,11 @@
       case 'contact':openDialog('Ask the orchard',`<p>Tell the study team what you need help with.</p><p class="sample-notice">This preview does not send messages.</p>${button('See a sample message','sample-message')}`,'help');break;
       case 'sample-message':openDialog('Sample message','<p>To: Red Truck Orchards</p><div class="message-card">Hello. I need help with my survey.<br>Alex Morgan</div><p class="small-note">Sample only. No message was sent.</p>'+button('Close','close-dialog'),'help');break;
       case 'delivery':openDialog('Your delivery',state.scenario==='baseline'?'<p>Your vinegar is on its way.</p><p>Expected September 14. You can answer your daily questions while you wait.</p>'+button('Close','close-dialog'):'<p>Your vinegar was received on September 14.</p>'+button('Ask about my delivery','contact'),'menu');break;
-      case 'demo':demo();break;
-      case 'demo-weeks':demoWeeks();break;
-      case 'demo-patterns':demoPatterns();break;
-      case 'load-sample':reset(button.dataset.scenario,state.pattern);break;
-      case 'load-pattern':reset(state.scenario,button.dataset.pattern);break;
-      case 'reset-confirm':openDialog('Reset this design?',`<p>This clears sample changes in ${concept.id.toUpperCase()}.</p>${button('Reset sample','reset')}${menuRow('Keep my place','close-dialog')}`,'demo');break;
-      case 'reset':reset();break;
-      case 'notes':if(framed){closeDialog();parent.postMessage({type:'d-notes'},'*');}else openDialog('Developer notes',window.ORCHARD_D.notes(concept),'notes');break;
-      case 'device':if(framed)parent.postMessage({type:'d-device'},'*');else{view.device=view.device==='mobile'?'desktop':'mobile';applyView();}break;
-      case 'frame':if(framed)parent.postMessage({type:'d-frame'},'*');else location.href=`index.html?design=${concept.id}&device=${view.device}&view=review`;break;
-      case 'gallery':if(framed)parent.postMessage({type:'d-gallery'},'*');else location.href=`index.html?design=${concept.id}#mockups`;break;
       case 'close-dialog':closeDialog();break;
     }
   });
   dialog.addEventListener('close',()=>{if(dialogReturn?.isConnected)dialogReturn.focus({preventScroll:true});else focusSlide(stage.lastElementChild);});
   dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeDialog();}});
-  addEventListener('message',event=>{if(!framed||event.source!==parent||(location.protocol!=='file:'&&event.origin!==location.origin))return;if(event.data?.type==='d-view'){view={device:event.data.device==='desktop'?'desktop':'mobile',filled:!!event.data.filled};applyView();}});
+  addEventListener('message',event=>{if(!framed||event.source!==parent||(location.protocol!=='file:'&&event.origin!==location.origin))return;if(event.data?.type==='d-view'){view={device:event.data.device==='desktop'?'desktop':'mobile',filled:!!event.data.filled};applyView();}if(event.data?.type==='d-load-sample'&&Object.hasOwn(M.SCENARIOS,event.data.scenario)&&Object.hasOwn(M.PATTERNS,event.data.pattern))loadDemoSample(event.data.scenario,event.data.pattern);});
   render();if(framed)parent.postMessage({type:'d-ready'},'*');
 })();

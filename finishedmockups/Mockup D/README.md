@@ -2,7 +2,7 @@
 
 Red Truck Orchards comes first. Cherry On Together is the survey.
 
-Open **[index.html](index.html)** to start with **D5**. On a phone, the app fills the available screen. On a desktop, it starts with the zoomed-out phone preview and the review controls visible. Switching back to mobile preview on a desktop also restores that zoomed-out view. The review frame uses 390 × 867, approximately 20:9, and scales down to fit the window.
+Open **[index.html](index.html)** to start with **D5**. On a phone, the app fills the space above the preview footer. On a desktop, it starts with the zoomed-out phone preview and the review controls visible. Switching back to mobile preview on a desktop also restores that zoomed-out view. The review frame uses 390 × 867, approximately 20:9, and scales down to fit the space above the footer.
 
 Today shows the study stage in a small, soft label beside the date. The daily wizard uses a quiet question-count label. The stage is not repeated inside the Today task card.
 
@@ -34,9 +34,9 @@ The use check comes after the symptom questions to keep the main task short and 
 
 - **Upper right:** menu and sample account. Signing out and back in retains the sample’s place.
 - **Bottom dashboard:** Today, Calendar, Chart, and Guide. These remain available during the wizard. Today returns to the current task.
-- **Lower left:** DEMO opens a small flyout. Load a study week, switch the sample chart pattern, read design notes, or reset that design.
-- **Lower right, left to right:** mobile/desktop view, five-design carousel, filled/review frame, and Help. The five-card icon uses two cards, two cards, then one card. Frame controls do not request browser fullscreen.
-- **Help:** a small explanation and a route to ask the orchard. Contact and delivery messages are demonstrations only.
+- **Outside the app, in the PREVIEW footer:** DEMO, the mobile/desktop switch, 5 designs, and Exact fit/Zoom out. These controls have visible labels. The footer remains visible in every preview mode, including on phones. Frame controls do not request browser fullscreen.
+- **DEMO:** its flyout also opens outside the app. Load a study week, switch the sample chart pattern, read design notes, or reset that design.
+- **Help, inside the app at the lower right:** a small explanation and a route to ask the orchard. Contact and delivery messages are demonstrations only.
 
 The review shell reveals D1–D5 tabs and developer notes. Switching the device or frame preserves the current page and draft. Each design has its own browser-session sample state.
 
